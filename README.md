@@ -1,1 +1,1 @@
-# graph
+This code is done in order to work with graphs. This application allows to create directed graphs adding nodes and links. It allows to print them it a list and in format .dot to use visualization applications like dot and neato. In particular, this application allows to transform a graph G and a new graph H of links. The nodes of the graph H are the links of the graph G. The links in the graph H present the way in which the links of G are connected.
