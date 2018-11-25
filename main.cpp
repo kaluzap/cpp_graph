@@ -3,12 +3,18 @@
 
 #include "graph.hxx"
 
-using namespace std;
 
 int main(int argc, char **argv)
 {
     
-    class GRAPH A, B, C, D;
+    std::vector<std::string> arguments(argv, argv + argc);
+    
+    
+    std::cout << arguments[0] << std::endl;
+    std::cout << arguments[1] << std::endl;
+    
+    
+    my_graph::GRAPH A, B, C, D;
 
     //B.read_file(argv[1], 4);
     
@@ -30,31 +36,31 @@ int main(int argc, char **argv)
     
     A.print_graph_dot("uno.dot");
     A.print_graph_list();
-    A.write_file(argv[1], 1);
+    A.write_file(arguments[1], 1);
     
     B = A.transformation();
     
-    cout << "\n";
+    std::cout << "\n";
     
     B.print_graph_dot("dos.dot");
     B.print_graph_list();
-    B.write_file(argv[1], 2);
+    B.write_file(arguments[1], 2);
     
     C = B.transformation();
     
-    cout << "\n";
+    std::cout << "\n";
     
     C.print_graph_dot("tres.dot");
     C.print_graph_list();
-    C.write_file(argv[1], 3);
+    C.write_file(arguments[1], 3);
     
     D = C.transformation();
     
-    cout << "\n";
+    std::cout << "\n";
     
     D.print_graph_dot("cuatro.dot");
     D.print_graph_list();
-    D.write_file(argv[1], 4);
+    D.write_file(arguments[1], 4);
     A = D;
     
     return 0;

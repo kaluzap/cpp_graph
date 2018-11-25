@@ -7,21 +7,47 @@
 
 #include "graph.hxx"
 
-using namespace std;
+//using namespace std;
 
-GRAPH::GRAPH()
+my_graph::GRAPH::GRAPH()
 {
     return;
 }
 
 
-int GRAPH::get_number_of_nodes(void)
+my_graph::GRAPH::GRAPH(int n)
+{
+    add_node(n);
+    return;
+}
+
+
+my_graph::GRAPH::GRAPH(class my_graph::GRAPH &in)
+{
+    input_list = in.input_list;
+    outdegree = in.outdegree;
+    return;
+}
+
+
+my_graph::GRAPH &my_graph::GRAPH::operator=(const my_graph::GRAPH &in)
+{
+    if(this != &in) { // self-assignment check expected
+        input_list = in.input_list;
+        outdegree = in.outdegree;
+    }
+    
+    return *this;
+}
+
+
+int my_graph::GRAPH::get_number_of_nodes(void)
 {
     return input_list.size();
 }
 
 
-int GRAPH::add_node(int n)
+int my_graph::GRAPH::add_node(int n)
 {
     for(int i=0; i<n; i++){
         input_list.push_back({});
@@ -31,7 +57,7 @@ int GRAPH::add_node(int n)
 }
 
 
-int GRAPH::add_link(int i, int j)
+int my_graph::GRAPH::add_link(int i, int j)
 {
     if( (i >= input_list.size()) || (i < 0) ) return -1;
     if( (j >= input_list.size()) || (j < 0) ) return -2;
@@ -44,21 +70,21 @@ int GRAPH::add_link(int i, int j)
 }
 
 
-bool GRAPH::is_link(int i, int j)
+bool my_graph::GRAPH::is_link(int i, int j)
 {
-    auto k = std::find(begin(input_list[i]), end(input_list[i]), j);
+    auto k = std::find(input_list[i].begin(), input_list[i].end(), j);
     
-    if ( k != std::end(input_list[i]) ) return true;
+    if ( k != input_list[i].end() ) return true;
     
     return false;
 }
 
 
-bool GRAPH::delete_link(int i, int j)
+bool my_graph::GRAPH::delete_link(int i, int j)
 {
     auto k = std::find(begin(input_list[i]), end(input_list[i]), j);
     
-    if ( k != std::end(input_list[i]) ){
+    if ( k != input_list[i].end() ){
         input_list[i].erase(k);
         outdegree[j]--;
         return true;
@@ -68,7 +94,7 @@ bool GRAPH::delete_link(int i, int j)
 }
 
 
-int GRAPH::delete_node(int i)
+int my_graph::GRAPH::delete_node(int i)
 {
     
     if( (i >= input_list.size()) || (i < 0) ) return -1;
@@ -91,49 +117,52 @@ int GRAPH::delete_node(int i)
 }
 
 
-int GRAPH::get_indegree(int i)
+int my_graph::GRAPH::get_indegree(int i)
 {
     return input_list[i].size();
 }
 
-int GRAPH::get_outdegree(int i)
+
+int my_graph::GRAPH::get_outdegree(int i)
 {
     return outdegree[i];
 }
 
-int GRAPH::get_degree(int i)
+
+int my_graph::GRAPH::get_degree(int i)
 {
     return input_list[i].size() + outdegree[i];
 }
 
-void GRAPH::print_graph_dot(const char *file_name)
+
+void my_graph::GRAPH::print_graph_dot(const std::string file_name)
 {
-    ofstream myfile;
+    std::ofstream myfile;
     myfile.open(file_name);
     
-    myfile << "digraph migraph{" << endl;
+    myfile << "digraph migraph{" << std::endl;
     
     myfile << "node [shape=circle,fixedsize=true]; ";
     
     for(int i=0; i < input_list.size(); i++) myfile << i << " ";
-    myfile << ";" << endl;
+    myfile << ";" << std::endl;
     
     
     for(int i=0; i < input_list.size(); i++){
         for(int j=0; j < input_list[i].size(); j++){
         
-            myfile << "\t" << input_list[i][j] << " -> " << i << ";" << endl;
+            myfile << "\t" << input_list[i][j] << " -> " << i << ";" << std::endl;
         }
     }
     
-    myfile << "}" << endl;
+    myfile << "}" << std::endl;
     myfile.close();
     
     return;
 }
 
 
-void GRAPH::print_graph_list(void)
+void my_graph::GRAPH::print_graph_list(void)
 {
  
     for(int i=0; i < input_list.size(); i++){
@@ -148,7 +177,7 @@ void GRAPH::print_graph_list(void)
 
 
 
-class GRAPH GRAPH::transformation(void)
+class my_graph::GRAPH my_graph::GRAPH::transformation(void)
 {
     
     class GRAPH temp;
@@ -212,9 +241,9 @@ class GRAPH GRAPH::transformation(void)
 
 
 
-int GRAPH::read_file(const char *file_name, int index)
+int my_graph::GRAPH::read_file(const std::string file_name, int index)
 {
-    ifstream myfile;
+    std::ifstream myfile;
     myfile.open(file_name);
     
     if (!myfile.is_open()){
@@ -225,9 +254,9 @@ int GRAPH::read_file(const char *file_name, int index)
     input_list.clear();
     
     int N;
-    string temp;
+    std::string temp;
     
-    string line;
+    std::string line;
     while ( getline (myfile,line) ){
         //cout << line << '\n';
       
@@ -270,9 +299,9 @@ int GRAPH::read_file(const char *file_name, int index)
     return -1;
 }
 
-int GRAPH::write_file(const char *file_name, int index)
+int my_graph::GRAPH::write_file(const std::string file_name, int index)
 {
-    ofstream myfile;
+    std::ofstream myfile;
     myfile.open(file_name, std::ofstream::app );
     
     
@@ -287,11 +316,11 @@ int GRAPH::write_file(const char *file_name, int index)
     for(int i=0; i < input_list.size(); i++){
         for(int j=0; j < input_list[i].size(); j++){
         
-            myfile << input_list[i][j] << " -> " << i << endl;
+            myfile << input_list[i][j] << " -> " << i << std::endl;
         }
     }
     
-    myfile << endl;
+    myfile << std::endl;
     myfile.close();
     
     return index;
